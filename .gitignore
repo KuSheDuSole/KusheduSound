@@ -32,3 +32,6 @@ build/
 .vscode/
 
 .env
+
+### Аудио-файлы ###
+/storage/
