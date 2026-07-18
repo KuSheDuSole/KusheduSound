@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KusheduSound</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <header class="top">
+    <div class="brand">
+      <div class="eq" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <span class="brand-name">KusheduSound</span>
+    </div>
+    <button id="refreshBtn" class="btn-ghost" type="button">Обновить</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Библиотека треков</h1>
+      <p class="hero-sub">Тестовый плеер поверх твоего API — <span id="trackCount">—</span></p>
+    </section>
+
+    <section id="tracks" class="track-list" aria-live="polite">
+      <p class="state-msg">Загрузка…</p>
+    </section>
+  </main>
+
+  <script src="/script.js"></script>
+</body>
+</html>
