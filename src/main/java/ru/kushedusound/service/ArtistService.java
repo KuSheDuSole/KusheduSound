@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.kushedusound.entity.Artist;
+import ru.kushedusound.entity.dto.response.ArtistResponseDto;
 import ru.kushedusound.repository.ArtistRepository;
 
 import java.util.List;
@@ -14,14 +15,20 @@ import java.util.List;
 public class ArtistService {
     private final ArtistRepository artistRepository;
 
-    public Artist createArtist(String name, String bio){
+    public ArtistResponseDto createArtist(String name, String bio){
         Artist artist = new Artist();
         artist.setName(name);
         artist.setBio(bio);
-        return artistRepository.save(artist);
+        return ArtistResponseDto.from(artistRepository.save(artist));
     }
 
-    public List<Artist> getAllArtists(){ return artistRepository.findAll(); }
+    public List<ArtistResponseDto> getAllArtists(){ return artistRepository.findAll()
+            .stream().map(ArtistResponseDto::from).toList(); }
+
+    public ArtistResponseDto getArtistDtoById(Long id) {
+        return ArtistResponseDto.from(getArtistById(id));
+    }
+
 
     public Artist getArtistById(Long id){
         return artistRepository.findById(id).orElseThrow(

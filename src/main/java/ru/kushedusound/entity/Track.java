@@ -20,8 +20,8 @@ public class Track {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 40)
-    private String name;
+    @Column(name = "title", nullable = false, length = 40)
+    private String title;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "artist_id", nullable = false)

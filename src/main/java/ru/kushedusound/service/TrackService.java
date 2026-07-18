@@ -50,7 +50,7 @@ public class TrackService {
         User defUser = userRepository.findByUsername(startUser)
                 .orElseThrow(() -> new IllegalStateException("Заглушка-юзер не найдена — проверь DataInitializer"));
         Track track = new Track();
-        track.setName(title);
+        track.setTitle(title);
         track.setArtist(artist);
         track.setAlbum(album);
         track.setFilePath(targetPath.toString());

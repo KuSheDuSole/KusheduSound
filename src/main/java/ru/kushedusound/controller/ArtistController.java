@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kushedusound.entity.dto.ArtistCreateRequest;
 import ru.kushedusound.entity.Album;
 import ru.kushedusound.entity.Artist;
+import ru.kushedusound.entity.dto.response.ArtistResponseDto;
 import ru.kushedusound.service.AlbumService;
 import ru.kushedusound.service.ArtistService;
 
@@ -19,13 +20,13 @@ public class ArtistController {
     private final AlbumService albumService;
 
     @PostMapping
-    public ResponseEntity<Artist> createArtist(@RequestBody ArtistCreateRequest request){
-        Artist artist = artistService.createArtist(request.name(), request.bio());
+    public ResponseEntity<ArtistResponseDto> createArtist(@RequestBody ArtistCreateRequest request){
+        ArtistResponseDto artist = artistService.createArtist(request.name(), request.bio());
         return ResponseEntity.ok(artist);
     }
 
     @GetMapping
-    public ResponseEntity<List<Artist>> getAllArtists(){
+    public ResponseEntity<List<ArtistResponseDto>> getAllArtists(){
         return ResponseEntity.ok(artistService.getAllArtists());
     }
 
