@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.kushedusound.entity.dto.TrackUploadRequest;
 import ru.kushedusound.entity.Track;
 import ru.kushedusound.service.TrackService;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,14 +21,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TrackController {
     private final TrackService trackService;
+    private final ObjectMapper objectMapper;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Track> uploadTrack(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("name") String name,
-            @RequestParam("artist") String artist
-    ) throws IOException {
-        Track track = trackService.uploadTrack(file, name, artist);
+            @RequestPart("file") MultipartFile file,
+            @RequestParam("data") String dataJson
+            ) throws IOException {
+        TrackUploadRequest data = objectMapper.readValue(dataJson, TrackUploadRequest.class);
+        Track track = trackService.uploadTrack(file, data.title(), data.artistId(), data.albumId());
         return ResponseEntity.ok(track);
     }
 

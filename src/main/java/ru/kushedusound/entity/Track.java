@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.antlr.v4.runtime.RuleContextWithAltNum;
 
 import java.time.LocalDateTime;
 
@@ -22,8 +23,13 @@ public class Track {
     @Column(name = "name", nullable = false, length = 40)
     private String name;
 
-    @Column(name = "artist", nullable = false, length = 40)
-    private String artist;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "artist_id", nullable = false)
+    private Artist artist;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "album_id")
+    private Album album;
 
     @Column(name = "file_path", nullable = false, unique = true)
     private String filePath;

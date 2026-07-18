@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.kushedusound.entity.Album;
+import ru.kushedusound.entity.Artist;
 import ru.kushedusound.entity.Track;
 import ru.kushedusound.entity.User;
 import ru.kushedusound.repository.TrackRepository;
@@ -23,6 +25,8 @@ import java.util.UUID;
 public class TrackService {
     private final TrackRepository trackRepository;
     private final UserRepository userRepository;
+    private final ArtistService artistService;
+    private final AlbumService albumService;
 
     @Value("${app.storage.tracks-path}")
     private String tracksPath;
@@ -30,8 +34,11 @@ public class TrackService {
     @Value("${app.test-user}")
     private String startUser;
 
-    public Track uploadTrack(MultipartFile file, String name, String artist) throws IOException {
-        Path storageDir = Path.of(tracksPath);
+    public Track uploadTrack(MultipartFile file, String title, Long artistId, Long albumId) throws IOException {
+        Artist artist = artistService.getArtistById(artistId);
+        Album album = (albumId != null)? albumService.getAlbumById(albumId) : null;
+
+        Path storageDir = buildStorageDir(artistId, albumId);
         Files.createDirectories(storageDir);
 
         String extension = getExtension(file.getOriginalFilename());
@@ -43,8 +50,9 @@ public class TrackService {
         User defUser = userRepository.findByUsername(startUser)
                 .orElseThrow(() -> new IllegalStateException("Заглушка-юзер не найдена — проверь DataInitializer"));
         Track track = new Track();
-        track.setName(name);
+        track.setName(title);
         track.setArtist(artist);
+        track.setAlbum(album);
         track.setFilePath(targetPath.toString());
         track.setFileSizeBytes(file.getSize());
         track.setUploadedBy(defUser);
@@ -66,5 +74,12 @@ public class TrackService {
             return "";
         }
         return originalFilename.substring(originalFilename.lastIndexOf('.'));
+    }
+
+    private Path buildStorageDir(Long artistId, Long albumId) {
+        Path base = Path.of(tracksPath, String.valueOf(artistId));
+        return (albumId != null)
+                ? base.resolve(String.valueOf(albumId))
+                : base.resolve("singles");
     }
 }
