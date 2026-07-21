@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kushedusound.entity.dto.AlbumCreateRequest;
 import ru.kushedusound.entity.Album;
+import ru.kushedusound.entity.dto.response.AlbumResponseDto;
 import ru.kushedusound.service.AlbumService;
 
 import java.util.List;
@@ -16,18 +17,18 @@ public class AlbumController {
     private final AlbumService albumService;
 
     @PostMapping
-    public ResponseEntity<Album> createAlbum(@RequestBody AlbumCreateRequest request){
-        Album album = albumService.createAlbum(request.title(), request.artistId(), request.releaseDate());
+    public ResponseEntity<AlbumResponseDto> createAlbum(@RequestBody AlbumCreateRequest request){
+        AlbumResponseDto album = albumService.createAlbum(request.title(), request.artistId(), request.releaseDate());
         return ResponseEntity.ok(album);
     }
 
     @GetMapping
-    public ResponseEntity<List<Album>> getAllAlbums(){
+    public ResponseEntity<List<AlbumResponseDto>> getAllAlbums(){
         return ResponseEntity.ok(albumService.getAllAlbums());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Album> getAlbum(@PathVariable Long id){
-        return ResponseEntity.ok(albumService.getAlbumById(id));
+    public ResponseEntity<AlbumResponseDto> getAlbum(@PathVariable Long id){
+        return ResponseEntity.ok(albumService.getAlbumDtoById(id));
     }
 }

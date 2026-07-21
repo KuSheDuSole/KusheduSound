@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kushedusound.entity.dto.TrackUploadRequest;
 import ru.kushedusound.entity.Track;
+import ru.kushedusound.entity.dto.response.TrackResponseDto;
 import ru.kushedusound.service.TrackService;
 import tools.jackson.databind.ObjectMapper;
 
@@ -24,23 +25,23 @@ public class TrackController {
     private final ObjectMapper objectMapper;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Track> uploadTrack(
+    public ResponseEntity<TrackResponseDto> uploadTrack(
             @RequestPart("file") MultipartFile file,
             @RequestParam("data") String dataJson
             ) throws IOException {
         TrackUploadRequest data = objectMapper.readValue(dataJson, TrackUploadRequest.class);
-        Track track = trackService.uploadTrack(file, data.title(), data.artistId(), data.albumId());
+        TrackResponseDto track = trackService.uploadTrack(file, data.title(), data.artistId(), data.albumId());
         return ResponseEntity.ok(track);
     }
 
     @GetMapping
-    public ResponseEntity<List<Track>> getAllTracks() {
+    public ResponseEntity<List<TrackResponseDto>> getAllTracks() {
         return ResponseEntity.ok(trackService.getAllTracks());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Track> getTrack(@PathVariable Long id) {
-        return ResponseEntity.ok(trackService.getTrackById(id));
+    public ResponseEntity<TrackResponseDto> getTrack(@PathVariable Long id) {
+        return ResponseEntity.ok(trackService.getTrackDtoById(id));
     }
 
     @GetMapping("/{id}/stream")

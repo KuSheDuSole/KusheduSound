@@ -9,6 +9,7 @@ import ru.kushedusound.entity.Album;
 import ru.kushedusound.entity.Artist;
 import ru.kushedusound.entity.Track;
 import ru.kushedusound.entity.User;
+import ru.kushedusound.entity.dto.response.TrackResponseDto;
 import ru.kushedusound.repository.TrackRepository;
 import ru.kushedusound.repository.UserRepository;
 
@@ -34,9 +35,9 @@ public class TrackService {
     @Value("${app.test-user}")
     private String startUser;
 
-    public Track uploadTrack(MultipartFile file, String title, Long artistId, Long albumId) throws IOException {
+    public TrackResponseDto uploadTrack(MultipartFile file, String title, Long artistId, Long albumId) throws IOException {
         Artist artist = artistService.getArtistById(artistId);
-        Album album = (albumId != null)? albumService.getAlbumById(albumId) : null;
+        Album album = (albumId != null) ? albumService.getAlbumById(albumId) : null;
 
         Path storageDir = buildStorageDir(artistId, albumId);
         Files.createDirectories(storageDir);
@@ -57,16 +58,21 @@ public class TrackService {
         track.setFileSizeBytes(file.getSize());
         track.setUploadedBy(defUser);
         track.setCreatedAt(LocalDateTime.now());
-        return trackRepository.save(track);
+        return TrackResponseDto.from(trackRepository.save(track));
     }
 
-    public List<Track> getAllTracks() {
-        return trackRepository.findAll();
+    public List<TrackResponseDto> getAllTracks() {
+        return trackRepository.findAll()
+                .stream().map(TrackResponseDto::from).toList();
     }
 
     public Track getTrackById(Long id) {
         return trackRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Трек не найден: id=" + id));
+    }
+
+    public TrackResponseDto getTrackDtoById(Long id){
+        return TrackResponseDto.from(getTrackById(id));
     }
 
     private String getExtension(String originalFilename) {

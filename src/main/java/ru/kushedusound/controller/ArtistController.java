@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kushedusound.entity.dto.ArtistCreateRequest;
 import ru.kushedusound.entity.Album;
 import ru.kushedusound.entity.Artist;
+import ru.kushedusound.entity.dto.response.AlbumResponseDto;
 import ru.kushedusound.entity.dto.response.ArtistResponseDto;
 import ru.kushedusound.service.AlbumService;
 import ru.kushedusound.service.ArtistService;
@@ -31,12 +32,12 @@ public class ArtistController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Artist> getArtist(@PathVariable Long id){
-        return ResponseEntity.ok(artistService.getArtistById(id));
+    public ResponseEntity<ArtistResponseDto> getArtist(@PathVariable Long id){
+        return ResponseEntity.ok(artistService.getArtistDtoById(id));
     }
 
     @GetMapping("/{id}/albums")
-    public ResponseEntity<List<Album>> getArtistAlbums(@PathVariable Long id){
+    public ResponseEntity<List<AlbumResponseDto>> getArtistAlbums(@PathVariable Long id){
         return ResponseEntity.ok(albumService.getArtistAlbums(id));
     }
 }

@@ -29,11 +29,9 @@ public class ArtistService {
         return ArtistResponseDto.from(getArtistById(id));
     }
 
-
     public Artist getArtistById(Long id){
         return artistRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("Артист не найден, id = " + id));
     }
-
 
 }
