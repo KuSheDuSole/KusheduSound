@@ -22,7 +22,7 @@ function renderTracks(tracks) {
       <div class="track-head">
         <div>
           <p class="track-title">${escapeHtml(track.title)}</p>
-          <p class="track-artist">${escapeHtml(track.artist?.name ?? 'Неизвестный артист')}</p>
+          <p class="track-artist">${escapeHtml(track.artistName ?? 'Неизвестный артист')}</p>
         </div>
         <span class="track-index">${String(i + 1).padStart(2, '0')}</span>
       </div>
