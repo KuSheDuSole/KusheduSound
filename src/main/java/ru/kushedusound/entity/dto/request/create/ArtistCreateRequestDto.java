@@ -1,4 +1,4 @@
 package ru.kushedusound.entity.dto.request.create;
 
-public record ArtistCreateRequest(String name, String bio) {
+public record ArtistCreateRequestDto(String name, String bio) {
 }

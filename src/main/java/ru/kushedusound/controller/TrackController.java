@@ -6,8 +6,9 @@ import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.kushedusound.entity.dto.TrackUploadRequest;
+import ru.kushedusound.entity.dto.request.create.TrackUploadRequestDto;
 import ru.kushedusound.entity.Track;
+import ru.kushedusound.entity.dto.request.update.TrackUpdateRequestDto;
 import ru.kushedusound.entity.dto.response.TrackResponseDto;
 import ru.kushedusound.service.TrackService;
 import tools.jackson.databind.ObjectMapper;
@@ -29,7 +30,7 @@ public class TrackController {
             @RequestPart("file") MultipartFile file,
             @RequestParam("data") String dataJson
             ) throws IOException {
-        TrackUploadRequest data = objectMapper.readValue(dataJson, TrackUploadRequest.class);
+        TrackUploadRequestDto data = objectMapper.readValue(dataJson, TrackUploadRequestDto.class);
         TrackResponseDto track = trackService.uploadTrack(file, data.title(), data.artistId(), data.albumId());
         return ResponseEntity.ok(track);
     }
@@ -76,6 +77,19 @@ public class TrackController {
                 .contentType(MediaType.parseMediaType(mimeType))
                 .header(HttpHeaders.ACCEPT_RANGES, "bytes")
                 .body(region);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TrackResponseDto> updateTrack(
+            @PathVariable Long id,
+            @RequestBody TrackUpdateRequestDto dto){
+        return ResponseEntity.ok(trackService.updateTrack(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTrack(@PathVariable Long id){
+        trackService.deleteTrack(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

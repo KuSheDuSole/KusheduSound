@@ -1,15 +1,18 @@
 package ru.kushedusound.service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kushedusound.entity.Album;
 import ru.kushedusound.entity.Artist;
 import ru.kushedusound.entity.Track;
 import ru.kushedusound.entity.User;
+import ru.kushedusound.entity.dto.request.update.TrackUpdateRequestDto;
 import ru.kushedusound.entity.dto.response.TrackResponseDto;
+import ru.kushedusound.exeptions.TrackFileDeletionException;
 import ru.kushedusound.repository.TrackRepository;
 import ru.kushedusound.repository.UserRepository;
 
@@ -61,18 +64,42 @@ public class TrackService {
         return TrackResponseDto.from(trackRepository.save(track));
     }
 
+    @Transactional(readOnly = true)
     public List<TrackResponseDto> getAllTracks() {
         return trackRepository.findAll()
                 .stream().map(TrackResponseDto::from).toList();
     }
 
+    @Transactional(readOnly = true)
     public Track getTrackById(Long id) {
         return trackRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Трек не найден: id=" + id));
     }
 
+
     public TrackResponseDto getTrackDtoById(Long id){
         return TrackResponseDto.from(getTrackById(id));
+    }
+
+    public TrackResponseDto updateTrack(Long id, TrackUpdateRequestDto dto){
+        Track track = getTrackById(id);
+        track.setTitle(dto.title());
+        track.setArtist(artistService.getArtistById(dto.artistId()));
+        track.setAlbum(albumService.getAlbumById(dto.albumId()));
+        track.setCreatedAt(dto.createdAt());
+        return TrackResponseDto.from(trackRepository.save(track));
+    }
+
+    public void deleteTrack(Long id){
+        Track track = getTrackById(id);
+        trackRepository.delete(track);
+        try {
+            FileSystemUtils.deleteRecursively(Path.of(track.getFilePath()));
+        } catch (IOException e) {
+            throw new TrackFileDeletionException(
+                    "Не удалось удалить файл трека: " + track.getFilePath(), e
+            );
+        }
     }
 
     private String getExtension(String originalFilename) {
