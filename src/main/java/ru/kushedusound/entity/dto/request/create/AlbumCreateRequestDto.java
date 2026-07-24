@@ -1,4 +1,4 @@
-package ru.kushedusound.entity.dto;
+package ru.kushedusound.entity.dto.request.create;
 
 import java.time.LocalDate;
 
