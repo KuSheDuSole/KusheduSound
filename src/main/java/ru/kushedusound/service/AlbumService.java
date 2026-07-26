@@ -71,6 +71,7 @@ public class AlbumService {
     public void deleteAlbum(Long id){
         Album album = getAlbumById(id);
         albumRepository.delete(album);
+        albumRepository.flush();
         try{
             FileSystemUtils.deleteRecursively(
                     Path.of(tracksPath, String.valueOf(album.getArtist().getId()), String.valueOf(id))

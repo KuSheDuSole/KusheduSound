@@ -29,7 +29,7 @@ public class FavouriteTrackService {
     }
 
     public void deleteFavourite(Long userId, Long trackId){
-        favouriteTrackRepository.deleteByUserIDAndTrackId(userId, trackId);
+        favouriteTrackRepository.deleteByUserIdAndTrackId(userId, trackId);
     }
 
     @Transactional(readOnly = true)

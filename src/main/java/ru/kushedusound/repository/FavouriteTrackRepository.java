@@ -10,5 +10,5 @@ public interface FavouriteTrackRepository extends JpaRepository<FavoriteTrack, L
 
     boolean existsByUserIdAndTrackId(Long userId, Long trackId);
 
-    void deleteByUserIDAndTrackId(Long userID, Long trackID);
+    void deleteByUserIdAndTrackId(Long userID, Long trackID);
 }

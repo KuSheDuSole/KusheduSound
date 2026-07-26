@@ -59,6 +59,7 @@ public class ArtistService {
     public void deleteArtist(Long id){
         Artist artist = getArtistById(id);
         artistRepository.delete(artist);
+        artistRepository.flush();
         try{
             FileSystemUtils.deleteRecursively(
                     Path.of(tracksPath, String.valueOf(artist.getId()))

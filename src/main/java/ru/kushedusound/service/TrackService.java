@@ -95,6 +95,7 @@ public class TrackService {
     public void deleteTrack(Long id){
         Track track = getTrackById(id);
         trackRepository.delete(track);
+        trackRepository.flush();
         try {
             FileSystemUtils.deleteRecursively(Path.of(track.getFilePath()));
         } catch (IOException e) {
