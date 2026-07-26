@@ -10,6 +10,7 @@ import ru.kushedusound.entity.Album;
 import ru.kushedusound.entity.Artist;
 import ru.kushedusound.entity.Track;
 import ru.kushedusound.entity.User;
+import ru.kushedusound.entity.dto.request.create.TrackUploadRequestDto;
 import ru.kushedusound.entity.dto.request.update.TrackUpdateRequestDto;
 import ru.kushedusound.entity.dto.response.TrackResponseDto;
 import ru.kushedusound.exeptions.TrackFileDeletionException;
@@ -38,11 +39,11 @@ public class TrackService {
     @Value("${app.test-user}")
     private String startUser;
 
-    public TrackResponseDto uploadTrack(MultipartFile file, String title, Long artistId, Long albumId) throws IOException {
-        Artist artist = artistService.getArtistById(artistId);
-        Album album = (albumId != null) ? albumService.getAlbumById(albumId) : null;
+    public TrackResponseDto uploadTrack(MultipartFile file, TrackUploadRequestDto dto) throws IOException {
+        Artist artist = artistService.getArtistById(dto.artistId());
+        Album album = (dto.albumId() != null) ? albumService.getAlbumById(dto.albumId()) : null;
 
-        Path storageDir = buildStorageDir(artistId, albumId);
+        Path storageDir = buildStorageDir(dto.artistId(), dto.albumId());
         Files.createDirectories(storageDir);
 
         String extension = getExtension(file.getOriginalFilename());
@@ -54,7 +55,7 @@ public class TrackService {
         User defUser = userRepository.findByUsername(startUser)
                 .orElseThrow(() -> new IllegalStateException("Заглушка-юзер не найдена — проверь DataInitializer"));
         Track track = new Track();
-        track.setTitle(title);
+        track.setTitle(dto.title());
         track.setArtist(artist);
         track.setAlbum(album);
         track.setFilePath(targetPath.toString());
@@ -83,9 +84,10 @@ public class TrackService {
 
     public TrackResponseDto updateTrack(Long id, TrackUpdateRequestDto dto){
         Track track = getTrackById(id);
+        Album album = (dto.albumId() != null) ? albumService.getAlbumById(dto.albumId()) : null;
         track.setTitle(dto.title());
         track.setArtist(artistService.getArtistById(dto.artistId()));
-        track.setAlbum(albumService.getAlbumById(dto.albumId()));
+        track.setAlbum(album);
         track.setCreatedAt(dto.createdAt());
         return TrackResponseDto.from(trackRepository.save(track));
     }

@@ -70,7 +70,6 @@ public class AlbumService {
 
     public void deleteAlbum(Long id){
         Album album = getAlbumById(id);
-        trackRepository.deleteByAlbumId(id);
         albumRepository.delete(album);
         try{
             FileSystemUtils.deleteRecursively(

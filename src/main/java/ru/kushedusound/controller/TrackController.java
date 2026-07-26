@@ -31,7 +31,7 @@ public class TrackController {
             @RequestParam("data") String dataJson
             ) throws IOException {
         TrackUploadRequestDto data = objectMapper.readValue(dataJson, TrackUploadRequestDto.class);
-        TrackResponseDto track = trackService.uploadTrack(file, data.title(), data.artistId(), data.albumId());
+        TrackResponseDto track = trackService.uploadTrack(file, data);
         return ResponseEntity.ok(track);
     }
 

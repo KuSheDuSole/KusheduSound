@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.antlr.v4.runtime.RuleContextWithAltNum;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -25,17 +26,20 @@ public class Track {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "artist_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Artist artist;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Album album;
 
     @Column(name = "file_path", nullable = false, unique = true)
     private String filePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "uploaded_by_user", nullable = false)
+    @JoinColumn(name = "uploaded_by_user")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private User uploadedBy;
 
     @Column(name = "created_at", nullable = false)

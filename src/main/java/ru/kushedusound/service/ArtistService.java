@@ -58,8 +58,6 @@ public class ArtistService {
 
     public void deleteArtist(Long id){
         Artist artist = getArtistById(id);
-        trackRepository.deleteByArtistId(id);
-        albumRepository.deleteByArtistId(id);
         artistRepository.delete(artist);
         try{
             FileSystemUtils.deleteRecursively(
