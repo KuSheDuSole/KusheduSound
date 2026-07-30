@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import ru.kushedusound.entity.Role;
 import ru.kushedusound.entity.User;
 import ru.kushedusound.repository.UserRepository;
 
@@ -25,7 +26,8 @@ public class DataInitializer implements CommandLineRunner {
                     DEF_USERNAME,
                     "def@kushedusound.ru",
                     "not_read_hash_password",
-                    LocalDateTime.now()
+                    LocalDateTime.now(),
+                    Role.ADMIN
             );
             userRepository.save(defUser);
         }

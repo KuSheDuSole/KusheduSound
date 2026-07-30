@@ -31,10 +31,16 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public User(String username, String email, String password, LocalDateTime createdAt) {
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role = Role.USER;
+
+
+    public User(String username, String email, String password, LocalDateTime createdAt, Role role) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.createdAt = createdAt;
+        this.role = role;
     }
 }

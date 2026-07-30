@@ -1,6 +1,7 @@
 package ru.kushedusound.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kushedusound.entity.User;
@@ -16,6 +17,7 @@ import java.util.List;
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponseDto createUser(UserCreateRequestDto dto){
         if (userRepository.existsByEmail(dto.email())){
@@ -24,7 +26,7 @@ public class UserService {
         User user = new User();
         user.setUsername(dto.username());
         user.setEmail(dto.email());
-        user.setPassword(dto.password());
+        user.setPassword(passwordEncoder.encode(dto.password()));
         return UserResponseDto.from(userRepository.save(user));
     }
 
