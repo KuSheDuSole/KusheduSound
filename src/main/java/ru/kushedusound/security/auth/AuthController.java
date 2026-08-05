@@ -1,6 +1,7 @@
 package ru.kushedusound.controller.auth;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -13,7 +14,7 @@ import ru.kushedusound.entity.dto.response.JwtAccessResponseDto;
 import ru.kushedusound.entity.dto.response.JwtResponseDto;
 import ru.kushedusound.entity.dto.response.UserResponseDto;
 import ru.kushedusound.service.UserService;
-import ru.kushedusound.service.security.AuthService;
+import ru.kushedusound.security.AuthService;
 
 import java.time.Duration;
 
@@ -28,7 +29,7 @@ public class AuthController {
     private final String REFRESH_COOKIE_PATH = "/auth/refresh";
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> register(@RequestBody UserCreateRequestDto dto){
+    public ResponseEntity<UserResponseDto> register(@Valid @RequestBody UserCreateRequestDto dto){
         return ResponseEntity.ok(userService.createUser(dto));
     }
 

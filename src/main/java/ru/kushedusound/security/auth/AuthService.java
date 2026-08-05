@@ -1,4 +1,4 @@
-package ru.kushedusound.service.security;
+package ru.kushedusound.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import ru.kushedusound.entity.dto.response.JwtAccessResponseDto;
 import ru.kushedusound.entity.dto.response.JwtResponseDto;
-import ru.kushedusound.service.security.jwt.JwtService;
-import ru.kushedusound.service.security.jwt.TokenBlacklistService;
+import ru.kushedusound.security.jwt.JwtService;
+import ru.kushedusound.security.jwt.TokenBlacklistService;
 
 @Service
 @RequiredArgsConstructor

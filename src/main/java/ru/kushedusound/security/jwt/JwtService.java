@@ -1,4 +1,4 @@
-package ru.kushedusound.service.security.jwt;
+package ru.kushedusound.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
