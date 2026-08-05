@@ -1,4 +1,4 @@
-package ru.kushedusound.controller;
+package ru.kushedusound.controller.entity;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
