@@ -3,6 +3,7 @@ package ru.kushedusound.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -15,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.kushedusound.config.filter.JwtAuthFilter;
+import ru.kushedusound.security.filter.JwtAuthFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -34,6 +35,24 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+
+                        .requestMatchers(HttpMethod.POST,
+                                "/tracks/**",
+                                "/albums/**",
+                                "/artists/**"
+                        ).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,
+                                "/tracks/**",
+                                "/albums/**",
+                                "/artists/**"
+                        ).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/tracks/**",
+                                "/albums/**",
+                                "/artists/**",
+                                "/users/**"
+                        ).hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())

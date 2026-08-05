@@ -1,16 +1,15 @@
-package ru.kushedusound.security;
+package ru.kushedusound.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import ru.kushedusound.entity.User;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -27,16 +26,20 @@ public class JwtService {
     @Value("${app.jwt.refresh-expiration-ms}")
     private long refreshExpirationMs;
 
-    public String generateAccessToken(UserDetails userDetails){
-        return buildToken(userDetails, accessExpirationMs, "access");
+    public String generateAccessToken(User user){
+        return buildToken(user, accessExpirationMs, "access");
     }
 
-    public String generateRefreshToken(UserDetails userDetails){
-        return buildToken(userDetails, refreshExpirationMs, "refresh");
+    public String generateRefreshToken(User user){
+        return buildToken(user, refreshExpirationMs, "refresh");
+    }
+
+    public String extractEmail(String token){
+        return extractClaim(token, Claims::getSubject);
     }
 
     public String extractUsername(String token){
-        return extractClaim(token, Claims::getSubject);
+        return extractClaim(token, claims -> claims.get("username", String.class));
     }
 
     public String extractAuthorities(String token){
@@ -55,6 +58,10 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    public Long extractUserId(String token) {
+        return extractClaim(token, c -> c.get("userId", Long.class));
+    }
+
     public boolean isTokenExpired(String token){
         return extractExpirations(token).before(new Date());
     }
@@ -63,16 +70,14 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    private String buildToken(UserDetails userDetails, long ttl, String type){
-        String authorities = userDetails.getAuthorities()
-                .stream()
-                .map(Objects::toString)
-                .reduce((a, b) -> a + "," + b)
-                .orElse("");
+    private String buildToken(User user, long ttl, String type){
+        String authorities = "ROLE_" + user.getRole().name();
         return Jwts.builder()
                 .id(UUID.randomUUID().toString())
-                .subject(userDetails.getUsername())
+                .subject(user.getEmail())
                 .claim("authorities", authorities)
+                .claim("userId", user.getId())
+                .claim("username", user.getUsername())
                 .claim("type", type)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + ttl))

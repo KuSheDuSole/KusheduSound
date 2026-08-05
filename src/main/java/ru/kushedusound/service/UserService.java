@@ -38,6 +38,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("Пользователь не найден, email = " + email));
+    }
+
+    @Transactional(readOnly = true)
     public UserResponseDto getUserDtoById(Long id){
         return UserResponseDto.from(getUserById(id));
     }

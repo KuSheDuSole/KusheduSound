@@ -1,4 +1,4 @@
-package ru.kushedusound.controller.auth;
+package ru.kushedusound.security.auth;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -14,7 +14,6 @@ import ru.kushedusound.entity.dto.response.JwtAccessResponseDto;
 import ru.kushedusound.entity.dto.response.JwtResponseDto;
 import ru.kushedusound.entity.dto.response.UserResponseDto;
 import ru.kushedusound.service.UserService;
-import ru.kushedusound.security.AuthService;
 
 import java.time.Duration;
 

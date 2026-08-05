@@ -1,4 +1,4 @@
-package ru.kushedusound.service.security;
+package ru.kushedusound.security;
 
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NullMarked;

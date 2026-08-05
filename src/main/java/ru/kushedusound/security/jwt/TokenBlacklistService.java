@@ -1,4 +1,4 @@
-package ru.kushedusound.security;
+package ru.kushedusound.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

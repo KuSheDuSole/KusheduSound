@@ -1,16 +1,15 @@
-package ru.kushedusound.security;
+package ru.kushedusound.security.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import ru.kushedusound.entity.User;
 import ru.kushedusound.entity.dto.response.JwtAccessResponseDto;
 import ru.kushedusound.entity.dto.response.JwtResponseDto;
 import ru.kushedusound.security.jwt.JwtService;
 import ru.kushedusound.security.jwt.TokenBlacklistService;
+import ru.kushedusound.service.UserService;
 
 @Service
 @RequiredArgsConstructor
@@ -18,13 +17,15 @@ public class AuthService {
     private final JwtService jwtService;
     private final TokenBlacklistService tokenBlacklistService;
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
+    private final UserService userService;
 
     public JwtResponseDto login(String username, String password){
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        String accessToken = jwtService.generateAccessToken(userDetails);
-        String refreshToken = jwtService.generateRefreshToken(userDetails);
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        User user = userService.getUserByEmail(username);
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
         return new JwtResponseDto(accessToken, refreshToken);
     }
 
@@ -41,10 +42,10 @@ public class AuthService {
             throw new IllegalStateException("Refresh token отозван");
         }
 
-        String username = jwtService.extractUsername(refreshToken);
-        UserDetails freshUserDetails = userDetailsService.loadUserByUsername(username);
+        String email = jwtService.extractEmail(refreshToken);
+        User user = userService.getUserByEmail(email);
 
-        String newAccessToken = jwtService.generateAccessToken(freshUserDetails);
+        String newAccessToken = jwtService.generateAccessToken(user);
 
         return new JwtAccessResponseDto(newAccessToken);
     }

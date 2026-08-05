@@ -1,4 +1,4 @@
-package ru.kushedusound.config.filter;
+package ru.kushedusound.security.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,7 +11,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.kushedusound.security.JwtService;
+import ru.kushedusound.security.CustomPrincipial;
+import ru.kushedusound.security.jwt.JwtService;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -39,17 +40,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
+            String email = jwtService.extractEmail(token);
             String username = jwtService.extractUsername(token);
+            Long id = jwtService.extractUserId(token);
             String authorityString = jwtService.extractAuthorities(token);
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null
                     && !jwtService.isTokenExpired(token)){
+
+                CustomPrincipial principial = new CustomPrincipial(id, email, username);
 
                 List<SimpleGrantedAuthority> authorities = Arrays.stream(authorityString.split(","))
                         .map(SimpleGrantedAuthority::new).toList();
 
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(username, null, authorities);
+                        new UsernamePasswordAuthenticationToken(principial, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
