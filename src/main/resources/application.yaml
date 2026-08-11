@@ -29,3 +29,5 @@ app:
     secret: ${JWT_SECRET}
     access-expiration-ms: 900000 # 15 минут
     refresh-expiration-ms: 86400000 # 24 часа     # 7 дней - 604800000
+  playlist:
+    expiration-h: 24
