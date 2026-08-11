@@ -7,7 +7,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.kushedusound.entity.dto.request.JwtRefreshRequestDto;
 import ru.kushedusound.entity.dto.request.LoginRequestDto;
 import ru.kushedusound.entity.dto.request.create.UserCreateRequestDto;
 import ru.kushedusound.entity.dto.response.JwtAccessResponseDto;
@@ -43,16 +42,16 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<JwtAccessResponseDto> refresh(
-            @CookieValue(REFRESH_COOKIE_NAME) JwtRefreshRequestDto dto){
-        return ResponseEntity.ok(authService.refresh(dto.refreshToken()));
+            @CookieValue(REFRESH_COOKIE_NAME) String dto){
+        return ResponseEntity.ok(authService.refresh(dto));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
-            @CookieValue(REFRESH_COOKIE_NAME) JwtRefreshRequestDto dto,
+            @CookieValue(REFRESH_COOKIE_NAME) String dto,
             HttpServletResponse response){
 
-        authService.logout(dto.refreshToken());
+        authService.logout(dto);
         setRefreshCookie(response, "", Duration.ZERO);
         return ResponseEntity.noContent().build();
     }
