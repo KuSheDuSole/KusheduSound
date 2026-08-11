@@ -42,6 +42,12 @@ public class PlaylistService {
                 .orElseThrow(() -> new IllegalArgumentException("Плейлист не найден, id = " + id));
     }
 
+    @Transactional(readOnly = true)
+    public List<TrackResponseDto> getPlaylistTracks(Long playlistId){
+        return playlistTrackRepository.findByPlaylistIdOrderByPosition(playlistId)
+                .stream().map(track -> TrackResponseDto.from(track.getTrack())).toList();
+    }
+
     public void addTrackToPlaylist(Long playlistId, Long trackId){
         Playlist playlist = getPlaylistById(playlistId);
         Track track = trackService.getTrackById(trackId);
@@ -56,11 +62,5 @@ public class PlaylistService {
     public void deletePlaylist(Long id){
         Playlist playlist = getPlaylistById(id);
         playlistRepository.delete(playlist);
-    }
-
-    @Transactional(readOnly = true)
-    public List<TrackResponseDto> getPlaylistTracks(Long playlistId){
-        return playlistTrackRepository.findByPlaylistIdOrderByPosition(playlistId)
-                .stream().map(track -> TrackResponseDto.from(track.getTrack())).toList();
     }
 }
