@@ -1,6 +1,6 @@
 package ru.kushedusound.security;
 
-public record CustomPrincipial(
+public record CustomPrincipal(
         Long id,
         String email,
         String username

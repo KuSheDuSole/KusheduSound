@@ -11,7 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.kushedusound.security.CustomPrincipial;
+import ru.kushedusound.security.CustomPrincipal;
 import ru.kushedusound.security.jwt.JwtService;
 
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null
                     && !jwtService.isTokenExpired(token)){
 
-                CustomPrincipial principial = new CustomPrincipial(id, email, username);
+                CustomPrincipal principial = new CustomPrincipal(id, email, username);
 
                 List<SimpleGrantedAuthority> authorities = Arrays.stream(authorityString.split(","))
                         .map(SimpleGrantedAuthority::new).toList();

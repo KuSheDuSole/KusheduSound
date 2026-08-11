@@ -31,13 +31,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principial.id()")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id()")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id){
         return ResponseEntity.ok(userService.getUserDtoById(id));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principial.id()")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id()")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long id,
             @RequestBody UserUpdateRequestDto dto
