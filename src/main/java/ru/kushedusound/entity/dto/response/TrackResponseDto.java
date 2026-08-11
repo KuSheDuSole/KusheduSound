@@ -27,8 +27,8 @@ public record TrackResponseDto (
                 track.getAlbum() != null ? track.getAlbum().getTitle() : null,
                 "/tracks/" + track.getId() + "/stream",
                 track.getDurationSeconds(),
-                track.getUploadedBy().getId(),
-                track.getUploadedBy().getUsername(),
+                track.getUploadedBy() != null ? track.getUploadedBy().getId() : null,
+                track.getUploadedBy() != null ? track.getUploadedBy().getUsername() : null,
                 track.getCreatedAt()
         );
     }

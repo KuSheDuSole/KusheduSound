@@ -7,6 +7,6 @@ public enum Role {
     ADMIN;
 
     public SimpleGrantedAuthority toAuthority(){
-        return new SimpleGrantedAuthority("ROLE" + this.name());
+        return new SimpleGrantedAuthority("ROLE_" + this.name());
     }
 }
