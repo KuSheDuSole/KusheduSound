@@ -17,18 +17,148 @@
       </div>
       <span class="brand-name">KusheduSound</span>
     </div>
-    <button id="refreshBtn" class="btn-ghost" type="button">Обновить</button>
+
+    <nav id="tabs" class="tabs hidden">
+      <button class="tab-btn active" data-tab="library" type="button">Библиотека</button>
+      <button class="tab-btn" data-tab="space" type="button">Личный кабинет</button>
+      <button class="tab-btn admin-only hidden" data-tab="admin" type="button">Админ</button>
+    </nav>
+
+    <div class="top-right">
+      <span id="whoami" class="whoami hidden"></span>
+      <button id="refreshBtn" class="btn-ghost hidden" type="button">Обновить</button>
+      <button id="logoutBtn" class="btn-ghost hidden" type="button">Выйти</button>
+    </div>
   </header>
 
   <main>
-    <section class="hero">
-      <h1>Библиотека треков</h1>
-      <p class="hero-sub">Тестовый плеер поверх твоего API — <span id="trackCount">—</span></p>
+
+    <!-- ---------- AUTH ---------- -->
+    <section id="authScreen" class="auth-screen">
+      <div class="auth-card">
+        <div class="auth-switch">
+          <button id="showLogin" class="auth-switch-btn active" type="button">Вход</button>
+          <button id="showRegister" class="auth-switch-btn" type="button">Регистрация</button>
+        </div>
+
+        <form id="loginForm" class="auth-form">
+          <label>Email
+            <input type="email" id="loginEmail" required autocomplete="email">
+          </label>
+          <label>Пароль
+            <input type="password" id="loginPassword" required autocomplete="current-password">
+          </label>
+          <button type="submit" class="btn-primary">Войти</button>
+          <p class="form-msg" id="loginMsg"></p>
+        </form>
+
+        <form id="registerForm" class="auth-form hidden">
+          <label>Никнейм
+            <input type="text" id="regUsername" required minlength="3" maxlength="30">
+          </label>
+          <label>Email
+            <input type="email" id="regEmail" required autocomplete="email">
+          </label>
+          <label>Пароль
+            <input type="password" id="regPassword" required minlength="12" maxlength="72" autocomplete="new-password">
+          </label>
+          <button type="submit" class="btn-primary">Зарегистрироваться</button>
+          <p class="form-msg" id="registerMsg"></p>
+        </form>
+      </div>
     </section>
 
-    <section id="tracks" class="track-list" aria-live="polite">
-      <p class="state-msg">Загрузка…</p>
+    <!-- ---------- LIBRARY ---------- -->
+    <section id="libraryTab" class="tab-panel">
+      <div class="hero">
+        <h1>Библиотека треков</h1>
+        <p class="hero-sub">Тестовый плеер поверх твоего API — <span id="trackCount">—</span></p>
+      </div>
+      <section id="tracks" class="track-list" aria-live="polite">
+        <p class="state-msg">Загрузка…</p>
+      </section>
     </section>
+
+    <!-- ---------- MY SPACE ---------- -->
+    <section id="spaceTab" class="tab-panel hidden">
+      <div class="hero">
+        <h1>Личный кабинет</h1>
+        <p class="hero-sub">Твои избранные треки и плейлисты</p>
+      </div>
+
+      <div class="space-grid">
+        <div class="space-col">
+          <h2 class="col-title">Избранное</h2>
+          <div id="favourites" class="mini-list">
+            <p class="state-msg">Загрузка…</p>
+          </div>
+        </div>
+
+        <div class="space-col">
+          <h2 class="col-title">Плейлисты</h2>
+          <form id="createPlaylistForm" class="inline-form">
+            <input type="text" id="playlistTitle" placeholder="Название плейлиста" required maxlength="60">
+            <button type="submit" class="btn-primary btn-sm">Создать</button>
+          </form>
+          <div id="playlists" class="mini-list">
+            <p class="state-msg">Загрузка…</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- ADMIN ---------- -->
+    <section id="adminTab" class="tab-panel hidden">
+      <div class="hero">
+        <h1>Админ-панель</h1>
+        <p class="hero-sub">Артисты, альбомы, треки, пользователи</p>
+      </div>
+
+      <div class="admin-grid">
+        <div class="admin-card">
+          <h2 class="col-title">Новый артист</h2>
+          <form id="createArtistForm" class="stack-form">
+            <input type="text" id="artistName" placeholder="Имя артиста" required maxlength="40">
+            <textarea id="artistBio" placeholder="Био (необязательно)" rows="2"></textarea>
+            <button type="submit" class="btn-primary btn-sm">Создать артиста</button>
+          </form>
+          <p class="form-msg" id="artistMsg"></p>
+        </div>
+
+        <div class="admin-card">
+          <h2 class="col-title">Новый альбом</h2>
+          <form id="createAlbumForm" class="stack-form">
+            <input type="text" id="albumTitle" placeholder="Название альбома" required maxlength="40">
+            <select id="albumArtistId" required></select>
+            <input type="date" id="albumReleaseDate">
+            <button type="submit" class="btn-primary btn-sm">Создать альбом</button>
+          </form>
+          <p class="form-msg" id="albumMsg"></p>
+        </div>
+
+        <div class="admin-card">
+          <h2 class="col-title">Загрузить трек</h2>
+          <form id="uploadTrackForm" class="stack-form">
+            <input type="text" id="trackTitle" placeholder="Название трека" required maxlength="40">
+            <select id="trackArtistId" required></select>
+            <select id="trackAlbumId">
+              <option value="">Без альбома</option>
+            </select>
+            <input type="file" id="trackFile" accept="audio/*" required>
+            <button type="submit" class="btn-primary btn-sm">Загрузить</button>
+          </form>
+          <p class="form-msg" id="trackMsg"></p>
+        </div>
+
+        <div class="admin-card admin-card-wide">
+          <h2 class="col-title">Пользователи</h2>
+          <div id="usersList" class="mini-list">
+            <p class="state-msg">Загрузка…</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <script src="/script.js"></script>
