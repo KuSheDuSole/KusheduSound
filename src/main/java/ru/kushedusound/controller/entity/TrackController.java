@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.kushedusound.entity.dto.request.create.TrackUploadRequestDto;
 import ru.kushedusound.entity.Track;
 import ru.kushedusound.entity.dto.request.update.TrackUpdateRequestDto;
 import ru.kushedusound.entity.dto.response.TrackResponseDto;
+import ru.kushedusound.security.CustomPrincipal;
 import ru.kushedusound.service.TrackService;
 import tools.jackson.databind.ObjectMapper;
 
@@ -28,10 +30,11 @@ public class TrackController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<TrackResponseDto> uploadTrack(
             @RequestPart("file") MultipartFile file,
-            @RequestParam("data") String dataJson
+            @RequestParam("data") String dataJson,
+            @AuthenticationPrincipal CustomPrincipal principal
             ) throws IOException {
         TrackUploadRequestDto data = objectMapper.readValue(dataJson, TrackUploadRequestDto.class);
-        TrackResponseDto track = trackService.uploadTrack(file, data);
+        TrackResponseDto track = trackService.uploadTrack(file, data, principal.id());
         return ResponseEntity.ok(track);
     }
 

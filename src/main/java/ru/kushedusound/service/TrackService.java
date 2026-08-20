@@ -36,10 +36,7 @@ public class TrackService {
     @Value("${app.storage.tracks-path}")
     private String tracksPath;
 
-    @Value("${app.test-user}")
-    private String startUser;
-
-    public TrackResponseDto uploadTrack(MultipartFile file, TrackUploadRequestDto dto) throws IOException {
+    public TrackResponseDto uploadTrack(MultipartFile file, TrackUploadRequestDto dto, Long userId) throws IOException {
         Artist artist = artistService.getArtistById(dto.artistId());
         Album album = (dto.albumId() != null) ? albumService.getAlbumById(dto.albumId()) : null;
 
@@ -52,8 +49,8 @@ public class TrackService {
 
         file.transferTo(targetPath);
 
-        User defUser = userRepository.findByUsername(startUser)
-                .orElseThrow(() -> new IllegalStateException("Заглушка-юзер не найдена — проверь DataInitializer"));
+        User defUser = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("Пользователь не найден, id = " + userId));
         Track track = new Track();
         track.setTitle(dto.title());
         track.setArtist(artist);

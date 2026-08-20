@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.kushedusound.entity.dto.request.create.PlaylistCreateDto;
 import ru.kushedusound.entity.dto.response.PlaylistResponseDto;
+import ru.kushedusound.entity.dto.response.TrackResponseDto;
 import ru.kushedusound.security.CustomPrincipal;
 import ru.kushedusound.service.PlaylistService;
 
@@ -32,6 +33,11 @@ public class PlaylistController {
     public ResponseEntity<List<PlaylistResponseDto>> getMyPlaylist(@AuthenticationPrincipal CustomPrincipal principal){
         Long userId = principal.id();
         return ResponseEntity.ok(playlistService.getUserPlaylists(userId));
+    }
+
+    @GetMapping("/{playlistId}/tracks")
+    public ResponseEntity<List<TrackResponseDto>> getPlaylistTracks(@PathVariable Long playlistId){
+        return ResponseEntity.ok(playlistService.getPlaylistTracks(playlistId));
     }
 
     @PostMapping("/{playlistId}/track/{trackId}")

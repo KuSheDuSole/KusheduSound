@@ -30,7 +30,7 @@ public class PlaylistService {
     private final RedisTemplate<String, String> redisTemplate;
     private static final String OWNER_PREFIX = "playlist:owner:";
 
-    @Value("#{app:playlist:expiration-h}")
+    @Value("${app.playlist.expiration-h}")
     private long OWNER_CACHE_TTL;
 
     public PlaylistResponseDto createPlaylist(Long userId, PlaylistCreateDto dto){
