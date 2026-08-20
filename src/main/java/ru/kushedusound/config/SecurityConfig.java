@@ -37,6 +37,13 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/style.css",
+                                "/script.js",
+                                "/favicon.ico"
+                        ).permitAll()
 
                         .requestMatchers(HttpMethod.POST,
                                 "/tracks/**",

@@ -24,7 +24,9 @@ spring:
 app:
   storage:
     tracks-path: ./storage/tracks
-  test-user: system_admin
+  base-admin:
+    email: ${BASE_ADMIN_EMAIL}
+    password: ${BASE_ADMIN_PASSWORD}
   jwt:
     secret: ${JWT_SECRET}
     access-expiration-ms: 900000 # 15 минут
